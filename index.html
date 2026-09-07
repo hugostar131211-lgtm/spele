@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="lv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neon Drift | Arkādes spēle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --ink: #eafbf7;
+        --muted: #8ba9a4;
+        --panel: #101c25;
+        --panel-light: #152833;
+        --line: rgba(133, 233, 212, 0.18);
+        --mint: #72f2d0;
+        --orange: #ff9f68;
+        --pink: #fa7197;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        font-family: "Space Grotesk", sans-serif;
+        background: #081117;
+        color: var(--ink);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 28px 16px;
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: .35;
+        background-image: linear-gradient(rgba(114,242,208,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(114,242,208,.035) 1px, transparent 1px);
+        background-size: 42px 42px;
+      }
+
+      .game-page {
+        width: min(100%, 1020px);
+        position: relative;
+        background: linear-gradient(145deg, rgba(21,40,51,.94), rgba(10,22,30,.96));
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: clamp(20px, 4vw, 42px);
+        box-shadow: 0 30px 80px rgba(0,0,0,.4), inset 0 1px rgba(255,255,255,.04);
+        animation: rise .7s ease both;
+      }
+
+      @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+      .topline, .stats { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+      .eyebrow { color: var(--mint); font: 500 .72rem "DM Mono", monospace; letter-spacing: .18em; text-transform: uppercase; }
+
+      h1 {
+        margin: 8px 0 4px;
+        font-size: clamp(2.1rem, 5vw, 4.2rem);
+        line-height: .95;
+        letter-spacing: -.07em;
+        font-weight: 700;
+      }
+
+      .intro { margin: 0; color: var(--muted); max-width: 540px; font-size: .98rem; line-height: 1.55; }
+      .best { color: var(--orange); font: 500 .78rem "DM Mono", monospace; }
+
+      .stats { margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+      .stat { padding: 13px 15px; border: 1px solid var(--line); background: rgba(9,20,27,.55); border-radius: 11px; }
+      .stat-label { color: var(--muted); font: .68rem "DM Mono", monospace; text-transform: uppercase; letter-spacing: .1em; }
+      .stat-value { display: block; margin-top: 5px; font-size: 1.35rem; font-weight: 600; }
+      #lives { color: var(--pink); letter-spacing: .1em; }
+
+      .game-area {
+        position: relative;
+        overflow: hidden;
+        background: #071117;
+        border-radius: 15px;
+        margin-top: 18px;
+        border: 1px solid rgba(114,242,208,.4);
+        box-shadow: 0 0 0 5px rgba(114,242,208,.035), 0 16px 32px rgba(0,0,0,.28);
+        aspect-ratio: 16 / 8;
+        min-height: 280px;
+        cursor: crosshair;
+      }
+
+      canvas { display: block; width: 100%; height: 100%; }
+      .game-status { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; text-align: center; }
+      .status-box { background: rgba(7,17,23,.78); border: 1px solid var(--line); padding: 18px 24px; border-radius: 12px; backdrop-filter: blur(5px); }
+      .status-title { display: block; font-size: 1.2rem; font-weight: 600; }
+      .status-copy { display: block; color: var(--muted); font: .73rem "DM Mono", monospace; margin-top: 7px; }
+
+      .controls { margin-top: 17px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .button-row { display: flex; gap: 9px; }
+      button {
+        font: 600 .82rem "Space Grotesk", sans-serif;
+        color: #071117;
+        background: var(--mint);
+        border: 0;
+        border-radius: 8px;
+        padding: 11px 18px;
+        cursor: pointer;
+        transition: transform .18s, background .18s, box-shadow .18s;
+      }
+      button:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(114,242,208,.2); }
+      button.secondary { color: var(--ink); background: var(--panel-light); border: 1px solid var(--line); }
+      button:focus-visible { outline: 2px solid var(--orange); outline-offset: 3px; }
+      .hint { color: var(--muted); font: .72rem "DM Mono", monospace; text-align: right; }
+
+      @media (max-width: 620px) {
+        .stats { grid-template-columns: repeat(2, 1fr); }
+        .game-area { min-height: 245px; aspect-ratio: 4 / 3; }
+        .controls { align-items: stretch; flex-direction: column; }
+        .button-row { width: 100%; }
+        button { flex: 1; }
+        .hint { text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="game-page">
+      <div class="topline"><span class="eyebrow">Neon Drift // 01</span><span class="best">BEST <span id="best-score">00000</span></span></div>
+      <h1>Drift through<br />the signal.</h1>
+      <p class="intro">Vadi savu kuģi caur neona lauku, savāc enerģijas kodolus un izvairies no sarkanajiem fragmentiem.</p>
+
+      <section class="stats" aria-label="Spēles statistika">
+        <div class="stat"><span class="stat-label">Rezultāts</span><strong class="stat-value" id="score">00000</strong></div>
+        <div class="stat"><span class="stat-label">Līmenis</span><strong class="stat-value" id="level">01</strong></div>
+        <div class="stat"><span class="stat-label">Enerģija</span><strong class="stat-value" id="energy">100%</strong></div>
+        <div class="stat"><span class="stat-label">Dzīvības</span><strong class="stat-value" id="lives">♥♥♥</strong></div>
+      </section>
+
+      <div class="game-area" id="game-area">
+        <canvas id="game-canvas" aria-label="Neon Drift spēles laukums"></canvas>
+        <div class="game-status" id="game-status">
+          <div class="status-box"><span class="status-title">Gatavs startam?</span><span class="status-copy">Nospied SĀKT vai SPACE</span></div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <div class="button-row"><button type="button" id="start-button">Sākt spēli</button><button type="button" class="secondary" id="pause-button">Pauze</button><button type="button" class="secondary" id="restart-button">Restartēt</button></div>
+        <span class="hint">← ↑ ↓ → / WASD &nbsp;•&nbsp; P pauzei</span>
+      </div>
+    </main>
+    <script>
+      const canvas = document.getElementById("game-canvas");
+      const ctx = canvas.getContext("2d");
+      const area = document.getElementById("game-area");
+      const status = document.getElementById("game-status");
+      const scoreEl = document.getElementById("score");
+      const levelEl = document.getElementById("level");
+      const energyEl = document.getElementById("energy");
+      const livesEl = document.getElementById("lives");
+      const bestEl = document.getElementById("best-score");
+      let width, height, animationId, lastTime = 0, running = false, paused = false;
+      let score = 0, level = 1, energy = 100, lives = 3, best = Number(localStorage.getItem("neon-drift-best") || 0);
+      let keys = {}, stars = [], cores = [], hazards = [], particles = [];
+      const player = { x: 0, y: 0, size: 13, speed: 270, invincible: 0 };
+      bestEl.textContent = String(best).padStart(5, "0");
+
+      function resize() {
+        const rect = area.getBoundingClientRect();
+        const ratio = window.devicePixelRatio || 1;
+        width = rect.width; height = rect.height;
+        canvas.width = width * ratio; canvas.height = height * ratio; ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+        if (!running) { player.x = width / 2; player.y = height / 2; }
+        stars = Array.from({ length: Math.max(35, Math.floor(width / 10)) }, () => ({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 1.5 + .3, a: Math.random() * .7 + .2 }));
+      }
+      function reset() {
+        score = 0; level = 1; energy = 100; lives = 3; cores = []; hazards = []; particles = []; player.invincible = 0;
+        resize(); updateUI(); showStatus("Gatavs startam?", "Nospied SĀKT vai SPACE");
+      }
+      function start() {
+        if (running && !paused) return;
+        if (!running) { running = true; paused = false; status.style.display = "none"; lastTime = performance.now(); animationId = requestAnimationFrame(loop); }
+        else { paused = false; status.style.display = "none"; lastTime = performance.now(); animationId = requestAnimationFrame(loop); }
+      }
+      function pause() { if (!running) return; paused = !paused; if (paused) { cancelAnimationFrame(animationId); showStatus("Pauze", "Nospied P vai turpini"); } else start(); }
+      function gameOver() { running = false; cancelAnimationFrame(animationId); if (score > best) { best = score; localStorage.setItem("neon-drift-best", best); bestEl.textContent = String(best).padStart(5, "0"); } showStatus("Signāls pārtrūka", `Rezultāts ${String(score).padStart(5, "0")} · nospied RESTARTĒT`); }
+      function showStatus(title, copy) { status.style.display = "grid"; status.querySelector(".status-title").textContent = title; status.querySelector(".status-copy").textContent = copy; }
+      function updateUI() { scoreEl.textContent = String(score).padStart(5, "0"); levelEl.textContent = String(level).padStart(2, "0"); energyEl.textContent = `${Math.max(0, Math.round(energy))}%`; livesEl.textContent = "♥".repeat(lives) + "♡".repeat(3 - lives); }
+      function spawn() {
+        if (cores.length < 1 + Math.floor(level / 3)) cores.push({ x: 30 + Math.random() * (width - 60), y: 25 + Math.random() * (height - 50), phase: Math.random() * 6 });
+        if (hazards.length < 1 + Math.floor(level / 2)) hazards.push({ x: width + 20, y: 22 + Math.random() * (height - 44), r: 7 + Math.random() * 5, speed: 65 + level * 10 + Math.random() * 55, phase: Math.random() * 6 });
+      }
+      function burst(x, y, color) { for (let i = 0; i < 12; i++) particles.push({ x, y, vx: (Math.random() - .5) * 140, vy: (Math.random() - .5) * 140, life: .5, color }); }
+      function update(dt) {
+        const dx = (keys.ArrowRight || keys.d ? 1 : 0) - (keys.ArrowLeft || keys.a ? 1 : 0);
+        const dy = (keys.ArrowDown || keys.s ? 1 : 0) - (keys.ArrowUp || keys.w ? 1 : 0);
+        const length = Math.hypot(dx, dy) || 1;
+        player.x = Math.max(15, Math.min(width - 15, player.x + dx / length * player.speed * dt));
+        player.y = Math.max(15, Math.min(height - 15, player.y + dy / length * player.speed * dt));
+        energy -= dt * (1.1 + level * .08); level = 1 + Math.floor(score / 100); spawn();
+        cores = cores.filter(core => { core.phase += dt * 3; if (Math.hypot(core.x - player.x, core.y - player.y) < 22) { score += 10; energy = Math.min(100, energy + 8); burst(core.x, core.y, "#72f2d0"); return false; } return true; });
+        hazards = hazards.filter(hazard => { hazard.x -= hazard.speed * dt; hazard.phase += dt * 4; if (hazard.x < -30) { score += 2; return false; } if (player.invincible <= 0 && Math.hypot(hazard.x - player.x, hazard.y - player.y) < hazard.r + 11) { lives--; player.invincible = 1.4; energy -= 18; burst(player.x, player.y, "#fa7197"); return false; } return true; });
+        player.invincible = Math.max(0, player.invincible - dt); particles = particles.filter(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt; return p.life > 0; });
+        if (energy <= 0 || lives <= 0) gameOver(); updateUI();
+      }
+      function draw() {
+        ctx.clearRect(0, 0, width, height); ctx.fillStyle = "#071117"; ctx.fillRect(0, 0, width, height);
+        stars.forEach(star => { ctx.fillStyle = `rgba(114,242,208,${star.a})`; ctx.beginPath(); ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2); ctx.fill(); });
+        cores.forEach(core => { const pulse = 1 + Math.sin(core.phase) * .2; ctx.shadowBlur = 18; ctx.shadowColor = "#72f2d0"; ctx.fillStyle = "#72f2d0"; ctx.beginPath(); ctx.arc(core.x, core.y, 6 * pulse, 0, Math.PI * 2); ctx.fill(); ctx.shadowBlur = 0; });
+        hazards.forEach(hazard => { ctx.save(); ctx.translate(hazard.x, hazard.y); ctx.rotate(hazard.phase); ctx.shadowBlur = 14; ctx.shadowColor = "#fa7197"; ctx.fillStyle = "#fa7197"; ctx.beginPath(); ctx.moveTo(0, -hazard.r); ctx.lineTo(hazard.r, 0); ctx.lineTo(0, hazard.r); ctx.lineTo(-hazard.r, 0); ctx.closePath(); ctx.fill(); ctx.restore(); });
+        particles.forEach(p => { ctx.globalAlpha = Math.max(0, p.life * 2); ctx.fillStyle = p.color; ctx.fillRect(p.x, p.y, 3, 3); }); ctx.globalAlpha = 1;
+        if (player.invincible % .2 < .1) { ctx.save(); ctx.translate(player.x, player.y); ctx.shadowBlur = 22; ctx.shadowColor = "#ff9f68"; ctx.fillStyle = "#ff9f68"; ctx.beginPath(); ctx.moveTo(15, 0); ctx.lineTo(-10, -9); ctx.lineTo(-5, 0); ctx.lineTo(-10, 9); ctx.closePath(); ctx.fill(); ctx.fillStyle = "#fff4dd"; ctx.beginPath(); ctx.arc(2, 0, 3, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+      }
+      function loop(time) { const dt = Math.min(.035, (time - lastTime) / 1000); lastTime = time; if (running && !paused) { update(dt); draw(); animationId = requestAnimationFrame(loop); } }
+      window.addEventListener("resize", resize); window.addEventListener("keydown", event => { keys[event.key] = true; if (event.key === " " || event.key === "Enter") { event.preventDefault(); start(); } if (event.key.toLowerCase() === "p") pause(); }); window.addEventListener("keyup", event => { keys[event.key] = false; });
+      area.addEventListener("pointermove", event => { if (!running || paused) return; const rect = area.getBoundingClientRect(); player.x = event.clientX - rect.left; player.y = event.clientY - rect.top; });
+      document.getElementById("start-button").addEventListener("click", start); document.getElementById("pause-button").addEventListener("click", pause); document.getElementById("restart-button").addEventListener("click", () => { running = false; cancelAnimationFrame(animationId); reset(); });
+      reset();
+    </script>
+  </body>
+</html>
