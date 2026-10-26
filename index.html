@@ -59,6 +59,8 @@
 
       .topline, .stats { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
       .eyebrow { color: var(--mint); font: 500 .72rem "DM Mono", monospace; letter-spacing: .18em; text-transform: uppercase; }
+      .lesson-link { color: var(--mint); font: 500 .78rem "DM Mono", monospace; text-decoration: none; }
+      .lesson-link:hover { text-decoration: underline; }
 
       h1 {
         margin: 8px 0 4px;
@@ -125,7 +127,7 @@
   </head>
   <body>
     <main class="game-page">
-      <div class="topline"><span class="eyebrow">Neon Drift // 01</span><span class="best">BEST <span id="best-score">00000</span></span></div>
+      <div class="topline"><span class="eyebrow">Neon Drift // 01</span><a class="lesson-link" href="23.html">Varoņa attēls</a><span class="best">BEST <span id="best-score">00000</span></span></div>
       <h1>Drift through<br />the signal.</h1>
       <p class="intro">Vadi savu kuģi caur neona lauku, savāc enerģijas kodolus un izvairies no sarkanajiem fragmentiem.</p>
 
