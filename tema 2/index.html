@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hugo spēle</title>
+<style>
+/* Pamata izkārtojums — šīs rindas nemaini */
+body { font-family: Arial, sans-serif; max-width: 680px; margin: 24px auto; padding: 16px; line-height: 1.6; }
+button, input { font: inherit; padding: 10px 16px; margin: 6px 0; cursor: pointer; }
+img, audio { max-width: 100%; }
+[hidden] { display: none !important; }
+
+/* NOFORMĒ ŠEIT: pielieto 2.1. un 2.2. nodarbībā apgūto CSS */
+body {
+  background-color: #920808;
+  color: #0ffcdc;
+}
+
+h1 {
+  color: #f3108d;
+  font-size: 36px;
+  text-align: center;.
+}
+
+.noteikumi {
+  background-color: #3cd129;
+  color: #222222;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.laukums {
+  width: 360px;
+  padding: 20px;
+  border: 2px solid #dee677;
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 100%;
+  text-align: center;
+  box-sizing: border-box;
+  background-color: #f8fafc;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #0aadca;
+  color: #ff0077;
+  border-radius: 8px;
+  border: 0;
+}
+</style>
+</head>
+<body>
+<h1>Hugo spēle
+  ''Dominē vai nedominē spēli.''</h1>
+<p>Īss spēles mērķa apraksts spēlētājam.</p>
+<section class="noteikumi">
+  <h2>Noteikumi</h2>
+  <p>Varonis ir Raimonds.</p>
+  <p>Poga dod vairāk punktu.</p>
+  <p>Skaņa apzime dominēšanas līmeni.</p>
+</section>
+<div class="laukums">
+  <h2>Spēles laukums</h2>
+  <img src="../atteli/varonis.svg.png" alt="Makaks Raimonds" width="128">
+  <p>Skaņas efekta nozīme spēlē:</p>
+  <audio controls src="../skanas/klikskis.wav"></audio>
+  <p>Skaņu dzirdēsi kad dominēsi spēli.</p>
+  <p id="punkti">Punkti: 0</p>
+  <p>Iegūsti punktus speižot pogu.</p>
+  <button onclick="savakt()">Savākt punktu</button>
+</div>
+<script>
+// Gatava punktu poga — šo skriptu nemaini.
+let punkti = 0;
+function savakt() {
+  punkti = punkti + 1;
+  document.getElementById("punkti").textContent = "Punkti: " + punkti;
+}
+</script>
+</body>
+</html>
