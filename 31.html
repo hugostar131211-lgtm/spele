@@ -21,6 +21,7 @@ img { max-width: 100%; height: auto; }
 <div class="panelis">
   <p id="punkti">Punkti: 0</p>
   <p id="dzivibas">Dzīvības: 0</p>
+  <p id="merkis">Mērķis: nav aprēķināts</p>
   <!-- 3. UZDEVUMS: šeit zemāk pievieno jaunu <p id="merkis"> rindkopu -->
 </div>
 <script>
@@ -29,11 +30,13 @@ const nosaukums = "Hugo spēle";
 const apraksts = "Pārbaudi savu domināciju.";
 let punkti = 20;
 let dzivibas = 3;
+const merkaPunkti = 50;
 
 // === 2. UZDEVUMS — RAKSTI ŠEIT: punktu un dzīvību aprēķini ===
 document.getElementById
 punkti = punkti + 7;
 dzivibas = dzivibas - 1;
+let lidzMerkim = merkaPunkti - punkti;
 
 
 // === GATAVĀ PARĀDĪŠANAS DAĻA (3. uzdevumā papildini ar mērķa rindu) ===
@@ -41,6 +44,7 @@ document.getElementById("nosaukums").textContent = nosaukums;
 document.getElementById("apraksts").textContent = apraksts;
 document.getElementById("punkti").textContent = "Punkti: " + punkti;
 document.getElementById("dzivibas").textContent = "Dzīvības: " + dzivibas;
+document.getElementById("merkis").textContent = "Līdz uzvarai vēl: " + lidzMerkim + " punkti";
 </script>
 </body>
 </html>
