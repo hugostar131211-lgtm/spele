@@ -20,7 +20,7 @@ img { max-width: 100%; height: auto; }
 <body>
 <h1>Uzzini savu dominācijas līmeni punktos.</h1>
 <!-- 2. un 3. UZDEVUMS: šeit zem virsraksta pievieno <p id="noteikumi"> rindkopu ar punktu noteikumiem -->
-  <p id="noteikumi">Viena zvaigzne dod 10 punktus.</p>
+  <p id="noteikumi"> katra zvaigzne dod 10 punktus un spēlētājs saņem arī 5 sākuma punktus.</p>
 <div class="panelis">
   <label for="vards">Spēlētāja vārds</label>
   <input id="vards" value="Lote">
@@ -39,7 +39,7 @@ function paradit() {
   const skaits = Number(document.getElementById("skaits").value);
 
   // === 2. un 3. UZDEVUMS — MAINI ŠEIT: punktu aprēķina formula ===
-  const punkti = skaits * 10;
+  const punkti = skaits * 10 + 5;
 
   // === GATAVĀ DAĻA — parāda aprēķināto atbildi lapā ===
   document.getElementById("atbilde").textContent = vards + ": " + punkti + " punkti";
