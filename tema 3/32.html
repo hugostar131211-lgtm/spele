@@ -23,10 +23,10 @@ img { max-width: 100%; height: auto; }
   <p id="noteikumi"> katra zvaigzne dod 10 punktus un spēlētājs saņem arī 5 sākuma punktus.</p>
 <div class="panelis">
   <label for="vards">Spēlētāja vārds</label>
-  <input id="vards" value="Lote">
+  <input id="vards" value="Hugobugo">
 
   <label for="skaits">Savākto zvaigžņu skaits</label>
-  <input id="skaits" type="number" min="0" value="1">
+  <input id="skaits" type="number" min="0" value="866664785">
 
   <button onclick="paradit()">Aprēķināt punktus</button>
   <p id="atbilde">Nospied pogu, lai redzētu rezultātu.</p>
@@ -42,7 +42,7 @@ function paradit() {
   const punkti = skaits * 3 * 10 + 5;
 
   // === GATAVĀ DAĻA — parāda aprēķināto atbildi lapā ===
-  document.getElementById("atbilde").textContent = vards + ":Lotte " + punkti + " punkti";
+  document.getElementById("atbilde").textContent = vards + ":Hugobugo " + punkti + " punkti";
 }
 </script>
 </body>
