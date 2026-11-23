@@ -33,7 +33,9 @@ function parbaudit() {
   let zina = "";
 
   // === 2. un 3. UZDEVUMS — MAINI ŠEIT: punktu pārbaude ar if / else if / else ===
-  if (punkti >= 10) {
+  if (punkti < 0) {
+    zina = "Kļūda: punkti nevar būt negatīvi!";
+  } else if (punkti >= 10) {
     zina = "Uzvara!";
   } else {
     zina = "Turpini spēli!";
