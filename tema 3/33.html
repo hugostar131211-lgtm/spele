@@ -19,7 +19,7 @@ img { max-width: 100%; height: auto; }
 </head>
 <body>
 <h1>Hugo spēle</h1>
-<!-- 3. UZDEVUMS: šeit zem virsraksta pievieno <p id="noteikumi"> rindkopu ar uzvaras mērķi -->
+<p id="noteikumi">Uzvarēsi, ja iegūsi 20 vai vairāk punktu!</p>
 <div class="panelis">
   <label for="skaits">Uzzini savu dominācijas līmeni.</label>
   <input id="skaits" type="number" value="0">
@@ -34,11 +34,13 @@ function parbaudit() {
 
   // === 2. un 3. UZDEVUMS — MAINI ŠEIT: punktu pārbaude ar if / else if / else ===
   if (punkti < 0) {
-    zina = "Kļūda: punkti nevar būt negatīvi!";
-  } else if (punkti >= 10) {
+    zina = "Kļūda: punkti nevar būt negatīvi.";
+  } else if (punkti >= 20) {
     zina = "Uzvara!";
   } else {
     zina = "Turpini spēli!";
+  } else if (punkti == 0) {
+    zina= "20 punkti līdz uzvarai.";
   }
 
   // === GATAVĀ DAĻA — parāda izvēlēto ziņu lapā (nemaini) ===
