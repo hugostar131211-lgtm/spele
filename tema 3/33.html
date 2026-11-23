@@ -37,10 +37,10 @@ function parbaudit() {
     zina = "Kļūda: punkti nevar būt negatīvi.";
   } else if (punkti >= 20) {
     zina = "Uzvara!";
+  } else if (punkti == 0) {
+    zina = "20 punkti līdz uzvarai.";
   } else {
     zina = "Turpini spēli!";
-  } else if (punkti == 0) {
-    zina= "20 punkti līdz uzvarai.";
   }
 
   // === GATAVĀ DAĻA — parāda izvēlēto ziņu lapā (nemaini) ===
